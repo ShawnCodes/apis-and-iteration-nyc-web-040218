@@ -24,8 +24,10 @@ end
 
 def films_by_character(character_array)
   films_by_given_character = {}
-   character_array.map { |character| films_by_given_character[character["name"]] = character["films"]}
-    films_by_given_character
+  character_array.map do |character|
+    films_by_given_character[character["name"]] = character["films"]
+  end
+  films_by_given_character
 end
 
 def films_for_given_character(film_hash, character_name)
