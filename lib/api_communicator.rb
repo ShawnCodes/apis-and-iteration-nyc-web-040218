@@ -61,9 +61,9 @@ def get_all_characters
   i = 1
   while i <= count
     response = RestClient.get('http://www.swapi.co/api/people/?page=' + i.to_s)
-     current_page = JSON.parse(response)
-     all_characters << current_page["results"]
-     i += 1
+    current_page = JSON.parse(response)
+    all_characters << current_page["results"]
+    i += 1
   end
   all_characters.flatten
 end
