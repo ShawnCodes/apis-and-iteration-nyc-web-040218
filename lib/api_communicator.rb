@@ -4,9 +4,10 @@ require 'pry'
 
 def get_character_movies_from_api(character)
   #make the web request
-  all_characters = RestClient.get('http://www.swapi.co/api/people/')
-  character_hash = JSON.parse(all_characters)
-  all_films = films_by_character(character_hash)
+  # all_characters = RestClient.get('http://www.swapi.co/api/people/')
+  # character_hash = JSON.parse(all_characters)
+  character_array = get_all_characters
+  all_films = films_by_character(character_array)
   character_films = films_for_given_character(all_films, character)
   urls_to_films(character_films)
 
@@ -21,9 +22,9 @@ def get_character_movies_from_api(character)
   #  of movies by title. play around with puts out other info about a given film.
 end
 
-def films_by_character(character_hash)
+def films_by_character(character_array)
   films_by_given_character = {}
-   character_hash["results"].map { |character| films_by_given_character[character["name"]] = character["films"]}
+   character_array.map { |character| films_by_given_character[character["name"]] = character["films"]}
     films_by_given_character
 end
 
@@ -46,6 +47,25 @@ end
 def show_character_movies(character)
   films_hash = get_character_movies_from_api(character)
   parse_character_movies(films_hash)
+end
+
+def get_count
+  response = RestClient.get('http://www.swapi.co/api/people/')
+  start_page = JSON.parse(response)
+  count = (start_page["count"].to_f / 10).ceil
+end
+
+def get_all_characters
+  count = get_count
+  all_characters = []
+  i = 1
+  while i <= count
+    response = RestClient.get('http://www.swapi.co/api/people/?page=' + i.to_s)
+     current_page = JSON.parse(response)
+     all_characters << current_page["results"]
+     i += 1
+  end
+  all_characters.flatten
 end
 
 ## BONUS
